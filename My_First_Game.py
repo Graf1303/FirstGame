@@ -2,42 +2,70 @@ import pygame
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((1500, 844))
 clock = pygame.time.Clock()
 running = True
 dt = 0
-black = (0, 0, 0)
-vel = 8
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+
+pygame.display.set_caption("Ball Buster!")
+background = pygame.image.load("brick-wall-background-texture1.png")
+
+
+# Medicine Ball
+playerimg = pygame.image.load("medicine-ball.png")
+playerx = 750
+playery = 422
+playerx_change = 0
+playery_change = 0
+
+def player(x,y):
+    screen.blit(playerimg, (x, y))
+
 
 # game loop
 while running:
+    # background
+    screen.fill((0,0,0))
+    #background image
+    screen.blit(background,(0,0))
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # background
-    screen.fill("pink")
+        # movement
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame. K_LEFT:
+                playerx_change = -5
+            if event.key == pygame. K_RIGHT:
+                playerx_change = 5
+            if event.key == pygame. K_UP:
+                playery_change = -5
+            if event.key == pygame. K_DOWN:
+                playery_change = 5
+        if event.type == pygame.KEYUP:
+            if event.key == pygame. K_LEFT or event.key == pygame. K_RIGHT:
+                playerx_change = 0
+            if event.key == pygame. K_UP or event.key == pygame. K_DOWN:
+                playery_change = 0
 
-    # our character
-    player = pygame.draw.circle(screen, "blue", player_pos, 40)
 
-    # Border
-    border = pygame.draw.rect(screen, black, (0, 0, 1280, 720), 1)
+    playerx += playerx_change
+    playery += playery_change
 
-    # Movement
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        player_pos.y -= vel
-    if keys[pygame.K_s]:
-        player_pos.y += vel
-    if keys[pygame.K_a]:
-        player_pos.x -= vel
-    if keys[pygame.K_d]:
-        player_pos.x += vel
+    if playerx <=0:
+        playerx = 0
+    elif playerx >= 1436:
+        playerx = 1436
+
+    if playery <=0:
+        playery = 0
+    elif playery >= 780:
+        playery = 780
+    player(playerx, playery)
 
     # THIS DISPLAYS YOUR WORK
-    pygame.display.flip()
+    pygame.display.update()
 
     # This is used for frame rate for the game
     dt = clock.tick(60) / 1000
